@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Plus, LogOut, FolderOpen, ChevronDown } from "lucide-react";
+import { Plus, LogOut, FolderOpen, ChevronDown, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 import { AuthDialog } from "@/components/auth/AuthDialog";
 import { signOut } from "@/actions";
 import { getProjects } from "@/actions/get-projects";
@@ -35,6 +36,25 @@ interface Project {
   name: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+function DarkModeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {resolvedTheme === "dark" ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
+    </Button>
+  );
 }
 
 export function HeaderActions({ user, projectId }: HeaderActionsProps) {
@@ -95,7 +115,8 @@ export function HeaderActions({ user, projectId }: HeaderActionsProps) {
   if (!user) {
     return (
       <>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <DarkModeToggle />
           <Button variant="outline" className="h-8" onClick={handleSignInClick}>
             Sign In
           </Button>
@@ -159,6 +180,8 @@ export function HeaderActions({ user, projectId }: HeaderActionsProps) {
         <Plus className="h-4 w-4" />
         New Design
       </Button>
+
+      <DarkModeToggle />
 
       <Button
         variant="ghost"
